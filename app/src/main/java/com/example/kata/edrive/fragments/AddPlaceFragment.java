@@ -35,13 +35,6 @@ public class AddPlaceFragment extends AppCompatDialogFragment {
             throw new RuntimeException("Activity must implement the IAddPlaceFragment interface!");
         }
 
-
-
-
-
-
-
-
     }
 
     @Override

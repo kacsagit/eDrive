@@ -15,7 +15,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.example.kata.edrive.recycleview.ItemAdapter;
 import com.example.kata.edrive.MainActivity;
 import com.example.kata.edrive.R;
 import com.example.kata.edrive.recycleview.RecycleViewItem;
@@ -26,7 +25,7 @@ import java.util.List;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class ListFragment extends Fragment{ //implements AddPlaceFragment.IAddPlaceFragment{
+public class ListFragment extends Fragment implements AddPlaceFragment.IAddPlaceFragment{ //implements AddPlaceFragment.IAddPlaceFragment{
 
     private static final Object TAG = "";
     private RecyclerView recyclerView;
@@ -41,6 +40,7 @@ public class ListFragment extends Fragment{ //implements AddPlaceFragment.IAddPl
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
     }
 
 
@@ -57,12 +57,16 @@ public class ListFragment extends Fragment{ //implements AddPlaceFragment.IAddPl
             }
         });
         initRecycleView();
+
+
         return view;
     }
 
     @Override
     public void onResume() {
         super.onResume();
+
+
     }
 
 
@@ -77,7 +81,6 @@ public class ListFragment extends Fragment{ //implements AddPlaceFragment.IAddPl
 
     private void initRecycleView() {
         recyclerView = (RecyclerView) view.findViewById(R.id.MainRecyclerView);
-        MainActivity.adapter = new ItemAdapter();
         loadItemsInBackground();
         recyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));
         recyclerView.setAdapter(MainActivity.adapter);
@@ -104,10 +107,10 @@ public class ListFragment extends Fragment{ //implements AddPlaceFragment.IAddPl
     }
 
 
-  /*  @Override
+    @Override
     public void onNewItemCreated(RecycleViewItem newItem) {
-        adapter.addItem(newItem);
-    }*/
+        MainActivity.adapter.addItem(newItem);
+    }
 
 
 

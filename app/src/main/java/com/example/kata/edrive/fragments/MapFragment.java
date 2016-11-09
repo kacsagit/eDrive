@@ -34,15 +34,16 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
         mapView = (MapView) view.findViewById(R.id.map);
         mapView.onCreate(savedInstanceState);
-        mapView.onResume();
-        mapView.getMapAsync(this);
 
-        return mapView;
+
+        return view;
     }
 
     @Override
     public void onResume() {
         super.onResume();
+        mapView.onResume();
+        mapView.getMapAsync(this);
     }
 
     @Override

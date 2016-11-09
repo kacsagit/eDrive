@@ -14,9 +14,7 @@ import com.example.kata.edrive.recycleview.RecycleViewItem;
 
 public class MainActivity extends AppCompatActivity implements AddPlaceFragment.IAddPlaceFragment {
 
-
-
-    public static ItemAdapter adapter;
+    public static ItemAdapter adapter = new ItemAdapter();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,7 +22,6 @@ public class MainActivity extends AppCompatActivity implements AddPlaceFragment.
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
 
     }
 
