@@ -47,7 +47,7 @@ public class AddPlaceFragment extends AppCompatDialogFragment {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
                                 if (isValid()) {
-                                    listener.onNewItemCreated(getShoppingItem());
+                                    listener.onNewItemCreated(getItem());
                                 }
                             }
                         })
@@ -63,7 +63,7 @@ public class AddPlaceFragment extends AppCompatDialogFragment {
         return place.getText().length() > 0;
     }
 
-    private RecycleViewItem getShoppingItem() {
+    private RecycleViewItem getItem() {
         RecycleViewItem item = new RecycleViewItem();
         item.place = place.getText().toString();
         item.latitude = Double.parseDouble(latitude.getText().toString());

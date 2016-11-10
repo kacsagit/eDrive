@@ -22,6 +22,7 @@ public class FragmentPager  extends FragmentPagerAdapter {
                 case 0:
                     ret = new ListFragment();
 
+
                     break;
                 case 1:
                     ret = new MapFragment();

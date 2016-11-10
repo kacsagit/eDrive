@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.example.kata.edrive.R;
+import com.example.kata.edrive.fragments.MapFragment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,7 +18,7 @@ import java.util.List;
 public class ItemAdapter extends
         RecyclerView.Adapter<ItemAdapter.ItemViewHolder> {
 
-    private final List<RecycleViewItem> items;
+    public final List<RecycleViewItem> items;
 
     public ItemAdapter() {
         items = new ArrayList<>();
@@ -47,6 +48,8 @@ public class ItemAdapter extends
     public void addItem(RecycleViewItem item) {
         items.add(item);
         notifyItemInserted(items.size() - 1);
+
+        MapFragment.setUpMap();
     }
 
     public void onItemDismiss(int position) {
@@ -56,6 +59,7 @@ public class ItemAdapter extends
         if (position < items.size()) {
             notifyItemRangeChanged(position, items.size() - position);
         }
+        MapFragment.setUpMap();
     }
 
 
