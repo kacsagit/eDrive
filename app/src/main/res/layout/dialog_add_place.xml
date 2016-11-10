@@ -15,7 +15,8 @@
             android:id="@+id/PlaceEditText"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:hint="@string/place" />
+            android:hint="@string/place"
+            />
 
     </android.support.design.widget.TextInputLayout>
 
@@ -37,7 +38,8 @@
                 android:layout_width="match_parent"
 
                 android:layout_height="match_parent"
-                android:hint="@string/longitude" />
+                android:hint="@string/longitude"
+                android:inputType="numberDecimal"/>
 
 
         </android.support.design.widget.TextInputLayout>
@@ -53,7 +55,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="0.5"
-                android:hint="@string/latitude" />
+                android:hint="@string/latitude"
+                android:inputType="numberDecimal"/>
 
         </android.support.design.widget.TextInputLayout>
     </LinearLayout>

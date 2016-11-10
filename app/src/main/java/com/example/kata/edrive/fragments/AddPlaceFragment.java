@@ -9,6 +9,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatDialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 
 import com.example.kata.edrive.R;
@@ -39,20 +40,33 @@ public class AddPlaceFragment extends AppCompatDialogFragment {
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        return new AlertDialog.Builder(getContext())
+        final AlertDialog d=new AlertDialog.Builder(getContext())
                 .setTitle(R.string.new_item)
                 .setView(getContentView())
-                .setPositiveButton(R.string.ok,
-                        new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                if (isValid()) {
-                                    listener.onNewItemCreated(getItem());
-                                }
-                            }
-                        })
+                .setPositiveButton(R.string.ok,null)
                 .setNegativeButton(R.string.cancel, null)
                 .create();
+
+
+        d.setOnShowListener(new DialogInterface.OnShowListener() {
+
+            @Override
+            public void onShow(DialogInterface dialog) {
+
+                Button b = ((AlertDialog) dialog).getButton(AlertDialog.BUTTON_POSITIVE);
+                b.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                                              if (isValid()) {
+                            listener.onNewItemCreated(getItem());
+                            d.dismiss();
+
+                        }
+                    }
+                });
+            }
+        });
+        return d;
     }
 
     public interface IAddPlaceFragment {
@@ -60,7 +74,25 @@ public class AddPlaceFragment extends AppCompatDialogFragment {
     }
 
     private boolean isValid() {
-        return place.getText().length() > 0;
+        if((place.getText().toString()).trim().length() == 0){
+            place.setError("Can't be empty");
+            place.requestFocus();
+            return false;
+        }
+        if((longitude.getText().toString()).trim().length() == 0|| Double.parseDouble(longitude.getText().toString())<-180.0  || Double.parseDouble(longitude.getText().toString())>180.0  ){
+            longitude.setError("From -180 to 180");
+            longitude.requestFocus();
+            return false;
+        }
+        if((latitude.getText().toString()).trim().length() == 0 || Double.parseDouble(latitude.getText().toString())<-90.0 || Double.parseDouble(latitude.getText().toString())>90.0 ){
+            latitude.setError("From -90 to 90");
+            latitude.requestFocus();
+            return false;
+        }
+
+
+        return true;
+
     }
 
     private RecycleViewItem getItem() {
@@ -77,6 +109,8 @@ public class AddPlaceFragment extends AppCompatDialogFragment {
         place= (EditText) contentView.findViewById(R.id.PlaceEditText);
         longitude = (EditText) contentView.findViewById(R.id.LongitudeEditText);
         latitude= (EditText) contentView.findViewById(R.id.LatitudeEditText);
+
+
         return contentView;
     }
 
