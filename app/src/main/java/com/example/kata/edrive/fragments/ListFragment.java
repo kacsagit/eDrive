@@ -8,6 +8,7 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
@@ -17,8 +18,8 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.example.kata.edrive.MainActivity;
-import com.example.kata.edrive.NetworkItem;
-import com.example.kata.edrive.NetworkManager;
+import com.example.kata.edrive.network.NetworkItem;
+import com.example.kata.edrive.network.NetworkManager;
 import com.example.kata.edrive.R;
 import com.example.kata.edrive.recycleview.RecycleViewItem;
 import com.example.kata.edrive.recycleview.SimpleItemTouchHelperCallback;
@@ -39,6 +40,7 @@ public class ListFragment extends Fragment implements AddPlaceFragment.IAddPlace
     //public ItemAdapter adapter;
     private ItemTouchHelper mItemTouchHelper;
     View view;
+    SwipeRefreshLayout swipeRefresh;
 
     public ListFragment() {
         // Required empty public constructor
@@ -90,9 +92,17 @@ public class ListFragment extends Fragment implements AddPlaceFragment.IAddPlace
 
     private void initRecycleView() {
         recyclerView = (RecyclerView) view.findViewById(R.id.MainRecyclerView);
+        swipeRefresh = (SwipeRefreshLayout) view.findViewById(R.id.swipeRefresh);
         loadItemsInBackground();
         recyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));
         recyclerView.setAdapter(MainActivity.adapter);
+
+        swipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                loadWebData();
+            }
+        });
 
         ItemTouchHelper.Callback callback = new SimpleItemTouchHelperCallback(MainActivity.adapter,recyclerView);
         mItemTouchHelper = new ItemTouchHelper(callback);
@@ -126,6 +136,7 @@ public class ListFragment extends Fragment implements AddPlaceFragment.IAddPlace
                     item.longitude=response.body().lon;
                     item.place=response.body().city;
                     MainActivity.adapter.addItem(item);
+                    swipeRefresh.setRefreshing(false);
 
                 } else {
                     Toast.makeText(getContext(), "Error: " + response.message(), Toast.LENGTH_SHORT).show();

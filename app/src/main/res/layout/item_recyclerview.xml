@@ -45,7 +45,7 @@
             tools:text="Longitude:" />
 
         <TextView
-            android:id="@+id/PlaceLatitude"
+            android:id="@+id/PlaceLongitude"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="0.5"
@@ -62,7 +62,7 @@
             tools:text="Latitude:" />
 
         <TextView
-            android:id="@+id/PlaceLongitude"
+            android:id="@+id/PlaceLatitude"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="0.5"

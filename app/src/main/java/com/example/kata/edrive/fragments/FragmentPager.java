@@ -40,7 +40,7 @@ public class FragmentPager  extends FragmentPagerAdapter {
                     title = "List";
                     break;
                 case 1:
-                    title = "Map";//context.getString("details");
+                    title = "Map";
                     break;
                 default:
                     title = "";

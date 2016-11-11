@@ -1,4 +1,4 @@
-package com.example.kata.edrive;
+package com.example.kata.edrive.network;
 
 
 import okhttp3.OkHttpClient;

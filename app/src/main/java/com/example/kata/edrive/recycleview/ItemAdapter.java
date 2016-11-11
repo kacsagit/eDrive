@@ -115,6 +115,7 @@ public class ItemAdapter extends
             Toast.makeText(v.getContext(),place.getText().toString(),Toast.LENGTH_SHORT).show();
             LatLng lt=new LatLng(Double.parseDouble(latitude.getText().toString()), Double.parseDouble(longitude.getText().toString()));
             MapFragment.zoom(lt);
+            MapFragment.zoomOnme=false;
             if (MainActivity.mainViewPager!=null){
                 MainActivity.mainViewPager.setCurrentItem(1, true);
             }

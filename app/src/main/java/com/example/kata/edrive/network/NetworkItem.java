@@ -1,4 +1,4 @@
-package com.example.kata.edrive;
+package com.example.kata.edrive.network;
 
 /**
  * Created by Kata on 2016. 11. 11..

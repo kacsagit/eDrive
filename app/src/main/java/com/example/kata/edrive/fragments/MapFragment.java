@@ -47,6 +47,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleA
     LatLng latLng;
     Marker currLocationMarker;
     Location mLastLocation = null;
+    public static boolean zoomOnme;
     public static boolean locpermisson;
     static List<Marker> markers = new ArrayList<>();
 
@@ -86,6 +87,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleA
         mapView.onResume();
         mapView.getMapAsync(this);
         mGoogleApiClient.connect();
+        zoomOnme=false;
 
 
     }
@@ -134,8 +136,9 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleA
                 googleMap.setOnMyLocationButtonClickListener(new GoogleMap.OnMyLocationButtonClickListener() {
                     @Override
                     public boolean onMyLocationButtonClick() {
-                        if (latLng!=null)
-                           zoom(latLng);
+                        if (latLng!=null){
+                            zoomOnme=true;
+                           zoom(latLng);}
                         return false;
                     }
                 });
@@ -143,6 +146,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleA
 
                 LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
             }
+
 
             if (mLastLocation != null) {
                 //place marker at current position
@@ -152,6 +156,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleA
                         .position(latLng).title("Current Position").icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
                 currLocationMarker = googleMap.addMarker(markerOptions);
                 zoom(latLng);
+                zoomOnme=true;
+
             }
 
         }
@@ -178,7 +184,13 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleA
                 .position(latLng).title("Current Position").icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
         currLocationMarker = googleMap.addMarker(markerOptions);
 
-        zoom(latLng);
+
+        if (zoomOnme) {
+            CameraPosition cameraPosition = new CameraPosition.Builder()
+                    .target(latLng).zoom(googleMap.getCameraPosition().zoom).build();
+            googleMap.animateCamera(CameraUpdateFactory
+                    .newCameraPosition(cameraPosition));
+        }
         //If you only need one location, unregister the listener
         //LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
     }
@@ -187,7 +199,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleA
         //zoom to current position:
         if (googleMap != null) {
             CameraPosition cameraPosition = new CameraPosition.Builder()
-                    .target(latLng).zoom(10).build();
+                    .target(latLng).zoom(15).build();
 
             googleMap.animateCamera(CameraUpdateFactory
                     .newCameraPosition(cameraPosition));
