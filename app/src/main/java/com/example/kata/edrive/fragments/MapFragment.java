@@ -1,9 +1,12 @@
 package com.example.kata.edrive.fragments;
 
+import android.Manifest;
+import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -43,6 +46,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleA
     GoogleApiClient mGoogleApiClient;
     LatLng latLng;
     Marker currLocationMarker;
+    Location mLastLocation = null;
+    public static boolean locpermisson;
     static List<Marker> markers = new ArrayList<>();
 
     public MapFragment() {
@@ -53,11 +58,12 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleA
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         buildGoogleApiClient();
-
+        locpermisson=true;
         mLocationRequest = LocationRequest.create()
                 .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
                 .setInterval(10 * 1000)        // 10 seconds, in milliseconds
                 .setFastestInterval(1 * 1000); // 1 second, in milliseconds
+
     }
 
 
@@ -96,16 +102,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleA
     @Override
     public void onMapReady(GoogleMap map) {
         googleMap = map;
-        googleMap.setMyLocationEnabled(true);
-        googleMap.setOnMyLocationButtonClickListener(new GoogleMap.OnMyLocationButtonClickListener() {
-            @Override
-            public boolean onMyLocationButtonClick() {
-                //TODO: Any custom actions
-                zoom(latLng);
-                return false;
-            }
-        });
-
         setUpMap();
 
     }
@@ -120,26 +116,46 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleA
     }
 
 
+
     @Override
     public void onConnected(@Nullable Bundle bundle) {
 
+        if (locpermisson) {
+            if (ActivityCompat.checkSelfPermission(this.getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                    && ActivityCompat.checkSelfPermission(this.getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
 
-        Location mLastLocation = LocationServices.FusedLocationApi.getLastLocation(
-                mGoogleApiClient);
+                ActivityCompat.requestPermissions(this.getActivity(), new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, 0);
 
-        if (mLastLocation != null) {
-            //place marker at current position
-            //mGoogleMap.clear();
-            latLng = new LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude());
-            MarkerOptions markerOptions = new MarkerOptions()
-                    .position(latLng).title("Current Position").icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
-            currLocationMarker = googleMap.addMarker(markerOptions);
+                return;
+            } else {
+                mLastLocation = LocationServices.FusedLocationApi.getLastLocation(
+                        mGoogleApiClient);
+                googleMap.setMyLocationEnabled(true);
+                googleMap.setOnMyLocationButtonClickListener(new GoogleMap.OnMyLocationButtonClickListener() {
+                    @Override
+                    public boolean onMyLocationButtonClick() {
+                        zoom(latLng);
+                        return false;
+                    }
+                });
 
-            zoom(latLng);
+
+                LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
+            }
+
+            if (mLastLocation != null) {
+                //place marker at current position
+                //mGoogleMap.clear();
+                latLng = new LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude());
+                MarkerOptions markerOptions = new MarkerOptions()
+                        .position(latLng).title("Current Position").icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
+                currLocationMarker = googleMap.addMarker(markerOptions);
+                zoom(latLng);
+            }
+
         }
 
 
-        LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
 
 
     }
@@ -164,8 +180,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleA
         zoom(latLng);
         //If you only need one location, unregister the listener
         //LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
-
-
     }
 
     public static void zoom(LatLng latLng) {

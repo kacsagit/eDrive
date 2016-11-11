@@ -1,5 +1,6 @@
 package com.example.kata.edrive;
 
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
@@ -9,6 +10,7 @@ import android.view.MenuItem;
 
 import com.example.kata.edrive.fragments.AddPlaceFragment;
 import com.example.kata.edrive.fragments.FragmentPager;
+import com.example.kata.edrive.fragments.MapFragment;
 import com.example.kata.edrive.recycleview.ItemAdapter;
 import com.example.kata.edrive.recycleview.RecycleViewItem;
 
@@ -16,8 +18,19 @@ public class MainActivity extends AppCompatActivity implements AddPlaceFragment.
 
     public static ItemAdapter adapter = new ItemAdapter();
     public static ViewPager mainViewPager;
+    FragmentPager detailsPagerAdapter;
 
     @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+
+
+        if (grantResults.length > 0
+                && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+        }else{
+            MapFragment.locpermisson=false;
+        }
+    }
+        @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
@@ -31,7 +44,7 @@ public class MainActivity extends AppCompatActivity implements AddPlaceFragment.
         super.onResume();
 
         mainViewPager = (ViewPager) findViewById(R.id.mainViewPager);
-        FragmentPager detailsPagerAdapter = new FragmentPager(getSupportFragmentManager(),this);
+        detailsPagerAdapter = new FragmentPager(getSupportFragmentManager(),this);
         mainViewPager.setAdapter(detailsPagerAdapter);
     }
 
@@ -41,6 +54,8 @@ public class MainActivity extends AppCompatActivity implements AddPlaceFragment.
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
+
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
