@@ -15,6 +15,7 @@ import com.example.kata.edrive.recycleview.RecycleViewItem;
 public class MainActivity extends AppCompatActivity implements AddPlaceFragment.IAddPlaceFragment {
 
     public static ItemAdapter adapter = new ItemAdapter();
+    public static ViewPager mainViewPager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,7 +30,7 @@ public class MainActivity extends AppCompatActivity implements AddPlaceFragment.
     protected void onResume() {
         super.onResume();
 
-        ViewPager mainViewPager = (ViewPager) findViewById(R.id.mainViewPager);
+        mainViewPager = (ViewPager) findViewById(R.id.mainViewPager);
         FragmentPager detailsPagerAdapter = new FragmentPager(getSupportFragmentManager(),this);
         mainViewPager.setAdapter(detailsPagerAdapter);
     }

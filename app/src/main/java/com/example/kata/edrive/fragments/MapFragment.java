@@ -98,6 +98,15 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleA
     public void onMapReady(GoogleMap map) {
         googleMap = map;
         googleMap.setMyLocationEnabled(true);
+        googleMap.setOnMyLocationButtonClickListener(new GoogleMap.OnMyLocationButtonClickListener() {
+            @Override
+            public boolean onMyLocationButtonClick() {
+                //TODO: Any custom actions
+                zoom(latLng);
+                return false;
+            }
+        });
+
         setUpMap();
 
     }
@@ -127,7 +136,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleA
                     .position(latLng).title("Current Position").icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
             currLocationMarker = googleMap.addMarker(markerOptions);
 
-            zoom();
+            zoom(latLng);
         }
 
 
@@ -153,26 +162,28 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleA
                 .position(latLng).title("Current Position").icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
         currLocationMarker = googleMap.addMarker(markerOptions);
 
-        zoom();
+        zoom(latLng);
         //If you only need one location, unregister the listener
         //LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
 
 
     }
 
-    public void zoom() {
+    public static void zoom(LatLng latLng) {
         //zoom to current position:
-        CameraPosition cameraPosition = new CameraPosition.Builder()
-                .target(latLng).zoom(10).build();
+        if (googleMap != null) {
+            CameraPosition cameraPosition = new CameraPosition.Builder()
+                    .target(latLng).zoom(10).build();
 
-        googleMap.animateCamera(CameraUpdateFactory
-                .newCameraPosition(cameraPosition));
+            googleMap.animateCamera(CameraUpdateFactory
+                    .newCameraPosition(cameraPosition));
+        }
     }
 
 
     public static void setUpMap() {
         if (googleMap != null) {
-            markers=new ArrayList<>();
+            markers = new ArrayList<>();
             for (RecycleViewItem item : MainActivity.adapter.items) {
                 LatLng latLng1 = new LatLng(item.latitude, item.longitude);
 

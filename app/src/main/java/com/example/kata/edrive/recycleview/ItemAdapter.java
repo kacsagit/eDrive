@@ -1,13 +1,17 @@
 package com.example.kata.edrive.recycleview;
 
 import android.support.v7.widget.RecyclerView;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.example.kata.edrive.MainActivity;
 import com.example.kata.edrive.R;
 import com.example.kata.edrive.fragments.MapFragment;
+import com.google.android.gms.maps.model.LatLng;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -84,7 +88,7 @@ public class ItemAdapter extends
 
     }
 
-    public class ItemViewHolder extends RecyclerView.ViewHolder {
+    public class ItemViewHolder extends RecyclerView.ViewHolder implements View.OnCreateContextMenuListener, View.OnClickListener {
 
         TextView place1;
         TextView longitude1;
@@ -102,6 +106,23 @@ public class ItemAdapter extends
             place1 = (TextView) itemView.findViewById(R.id.Place);
             longitude1 = (TextView) itemView.findViewById(R.id.Longitude);
             latitude1 = (TextView) itemView.findViewById(R.id.Latitude);
+            itemView.setOnClickListener(this);
+
+        }
+
+        @Override
+        public void onClick(View v) {
+            Toast.makeText(v.getContext(),place.getText().toString(),Toast.LENGTH_SHORT).show();
+            LatLng lt=new LatLng(Double.parseDouble(latitude.getText().toString()), Double.parseDouble(longitude.getText().toString()));
+            MapFragment.zoom(lt);
+            if (MainActivity.mainViewPager!=null){
+                MainActivity.mainViewPager.setCurrentItem(1, true);
+            }
+
+        }
+
+        @Override
+        public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
 
         }
     }
