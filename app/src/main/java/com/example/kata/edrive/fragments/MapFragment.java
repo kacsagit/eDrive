@@ -134,7 +134,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleA
                 googleMap.setOnMyLocationButtonClickListener(new GoogleMap.OnMyLocationButtonClickListener() {
                     @Override
                     public boolean onMyLocationButtonClick() {
-                        zoom(latLng);
+                        if (latLng!=null)
+                           zoom(latLng);
                         return false;
                     }
                 });

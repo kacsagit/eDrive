@@ -14,13 +14,20 @@ import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.example.kata.edrive.MainActivity;
+import com.example.kata.edrive.NetworkItem;
+import com.example.kata.edrive.NetworkManager;
 import com.example.kata.edrive.R;
 import com.example.kata.edrive.recycleview.RecycleViewItem;
 import com.example.kata.edrive.recycleview.SimpleItemTouchHelperCallback;
 
 import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -66,6 +73,8 @@ public class ListFragment extends Fragment implements AddPlaceFragment.IAddPlace
     public void onResume() {
         super.onResume();
 
+        loadWebData();
+
 
     }
 
@@ -104,6 +113,31 @@ public class ListFragment extends Fragment implements AddPlaceFragment.IAddPlace
                 MainActivity.adapter.update(shoppingItems);
             }
         }.execute();
+    }
+
+
+    private void loadWebData() {
+        NetworkManager.getInstance().getData().enqueue(new Callback<NetworkItem>() {
+            @Override
+            public void onResponse(Call<NetworkItem> call, Response<NetworkItem> response) {
+                if (response.isSuccessful()) {
+                    RecycleViewItem item=new RecycleViewItem();
+                    item.latitude=response.body().lat;
+                    item.longitude=response.body().lon;
+                    item.place=response.body().city;
+                    MainActivity.adapter.addItem(item);
+
+                } else {
+                    Toast.makeText(getContext(), "Error: " + response.message(), Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<NetworkItem> call, Throwable t) {
+                t.printStackTrace();
+                Toast.makeText(getContext(), "Error in network request", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
 
