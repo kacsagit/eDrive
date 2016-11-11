@@ -8,7 +8,6 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.example.kata.edrive.MainActivity;
 import com.example.kata.edrive.R;
@@ -188,7 +187,9 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleA
                 LatLng latLng1 = new LatLng(item.latitude, item.longitude);
 
                 MarkerOptions markerOptions = new MarkerOptions()
-                        .position(latLng1).title("Gas station").icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_YELLOW));
+                        .position(latLng1).title(item.place).icon(BitmapDescriptorFactory.fromResource(R.drawable.chargingbattery));
+             /*   MarkerOptions markerOptions = new MarkerOptions()
+                        .position(latLng1).title(item.place).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_YELLOW));*/
                 markers.add(googleMap.addMarker(markerOptions));
             }
         }
