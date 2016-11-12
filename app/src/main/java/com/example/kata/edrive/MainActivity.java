@@ -122,9 +122,11 @@ public class MainActivity extends AppCompatActivity implements AddPlaceFragment.
                 i.putExtra("sms_body", "The SMS text");
                 startActivity(i);*/
 
-                if (System.currentTimeMillis() / 1000-lastsms>=30)
+                if (System.currentTimeMillis() / 1000-lastsms>=30) {
                     sendSMS("5556", "The SMS text");
-                lastsms=System.currentTimeMillis() / 1000;
+                    lastsms=System.currentTimeMillis() / 1000;
+                }
+
 
             }
             x = event.values[0];
