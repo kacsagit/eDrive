@@ -209,7 +209,11 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleA
 
     public static void setUpMap() {
         if (googleMap != null) {
-            markers = new ArrayList<>();
+            if (markers != null) {
+                for (Marker marker:markers) {
+                    marker.remove();
+                }
+            }
             for (RecycleViewItem item : MainActivity.adapter.items) {
                 LatLng latLng1 = new LatLng(item.latitude, item.longitude);
 

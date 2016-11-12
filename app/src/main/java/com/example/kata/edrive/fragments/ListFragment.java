@@ -15,25 +15,33 @@ import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.example.kata.edrive.MainActivity;
+import com.example.kata.edrive.R;
+import com.example.kata.edrive.network.GetLocationsEvent;
 import com.example.kata.edrive.network.NetworkItem;
 import com.example.kata.edrive.network.NetworkManager;
-import com.example.kata.edrive.R;
 import com.example.kata.edrive.recycleview.RecycleViewItem;
 import com.example.kata.edrive.recycleview.SimpleItemTouchHelperCallback;
 
-import java.util.List;
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
  */
 public class ListFragment extends Fragment implements AddPlaceFragment.IAddPlaceFragment{ //implements AddPlaceFragment.IAddPlaceFragment{
+
+    @Override
+    public void onPause() {
+
+        EventBus.getDefault().unregister(this);
+        super.onPause();
+
+    }
 
     private static final Object TAG = "";
     private RecyclerView recyclerView;
@@ -74,8 +82,9 @@ public class ListFragment extends Fragment implements AddPlaceFragment.IAddPlace
     @Override
     public void onResume() {
         super.onResume();
-
         loadWebData();
+
+        EventBus.getDefault().register(this);
 
 
     }
@@ -127,28 +136,21 @@ public class ListFragment extends Fragment implements AddPlaceFragment.IAddPlace
 
 
     private void loadWebData() {
-        NetworkManager.getInstance().getData().enqueue(new Callback<NetworkItem>() {
-            @Override
-            public void onResponse(Call<NetworkItem> call, Response<NetworkItem> response) {
-                if (response.isSuccessful()) {
-                    RecycleViewItem item=new RecycleViewItem();
-                    item.latitude=response.body().lat;
-                    item.longitude=response.body().lon;
-                    item.place=response.body().city;
-                    MainActivity.adapter.addItem(item);
-                    swipeRefresh.setRefreshing(false);
+        NetworkManager galleryInteractor = new NetworkManager(this.getContext());
+        galleryInteractor.getData();
+    }
 
-                } else {
-                    Toast.makeText(getContext(), "Error: " + response.message(), Toast.LENGTH_SHORT).show();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<NetworkItem> call, Throwable t) {
-                t.printStackTrace();
-                Toast.makeText(getContext(), "Error in network request", Toast.LENGTH_SHORT).show();
-            }
-        });
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onResponse(GetLocationsEvent<NetworkItem> event) {
+        RecycleViewItem rwi = new RecycleViewItem();
+        NetworkItem itemsn=event.getLocations();
+        rwi.place = itemsn.city;
+        rwi.latitude = itemsn.lat;
+        rwi.longitude = itemsn.lon;
+        MainActivity.adapter.removeAllItems();
+        MainActivity.adapter.addItem(rwi);
+        recyclerView.setAdapter(MainActivity.adapter);
+        swipeRefresh.setRefreshing(false);
     }
 
 
@@ -156,8 +158,6 @@ public class ListFragment extends Fragment implements AddPlaceFragment.IAddPlace
     public void onNewItemCreated(RecycleViewItem newItem) {
         MainActivity.adapter.addItem(newItem);
     }
-
-
 
 
 }

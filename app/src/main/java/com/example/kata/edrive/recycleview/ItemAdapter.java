@@ -29,6 +29,7 @@ public class ItemAdapter extends
     }
 
 
+
     @Override
     public ItemViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemView =
@@ -56,6 +57,8 @@ public class ItemAdapter extends
         MapFragment.setUpMap();
     }
 
+
+
     public void onItemDismiss(int position) {
         RecycleViewItem removed = items.remove(position);
         removed.delete();
@@ -65,6 +68,19 @@ public class ItemAdapter extends
         }
         MapFragment.setUpMap();
     }
+
+    public void removeAllItems() {
+        for (RecycleViewItem item : items) {
+            item.delete();
+        }
+        int count = items.size();
+        items.clear();
+        notifyItemRangeRemoved(0, count);
+        MapFragment.setUpMap();
+    }
+
+
+
 
 
     public void onItemMove(int fromPosition, int toPosition) {
@@ -82,9 +98,9 @@ public class ItemAdapter extends
     }
 
     public void update(List<RecycleViewItem> items) {
-            items.clear();
-            items.addAll(items);
-            notifyDataSetChanged();
+        items.clear();
+        items.addAll(items);
+        notifyDataSetChanged();
 
     }
 
@@ -112,11 +128,11 @@ public class ItemAdapter extends
 
         @Override
         public void onClick(View v) {
-            Toast.makeText(v.getContext(),place.getText().toString(),Toast.LENGTH_SHORT).show();
-            LatLng lt=new LatLng(Double.parseDouble(latitude.getText().toString()), Double.parseDouble(longitude.getText().toString()));
+            Toast.makeText(v.getContext(), place.getText().toString(), Toast.LENGTH_SHORT).show();
+            LatLng lt = new LatLng(Double.parseDouble(latitude.getText().toString()), Double.parseDouble(longitude.getText().toString()));
             MapFragment.zoom(lt);
-            MapFragment.zoomOnme=false;
-            if (MainActivity.mainViewPager!=null){
+            MapFragment.zoomOnme = false;
+            if (MainActivity.mainViewPager != null) {
                 MainActivity.mainViewPager.setCurrentItem(1, true);
             }
 

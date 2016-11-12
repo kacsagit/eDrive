@@ -1,7 +1,5 @@
 package com.example.kata.edrive.network;
 
-import com.example.kata.edrive.network.NetworkItem;
-
 import retrofit2.Call;
 import retrofit2.http.GET;
 
