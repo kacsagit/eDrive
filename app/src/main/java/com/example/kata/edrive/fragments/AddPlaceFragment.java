@@ -25,7 +25,6 @@ public class AddPlaceFragment extends AppCompatDialogFragment {
     private IAddPlaceFragment listener;
 
 
-
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,12 +39,16 @@ public class AddPlaceFragment extends AppCompatDialogFragment {
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        final AlertDialog d=new AlertDialog.Builder(getContext())
+        final AlertDialog d = new AlertDialog.Builder(getContext())
                 .setTitle(R.string.new_item)
                 .setView(getContentView())
-                .setPositiveButton(R.string.ok,null)
+                .setPositiveButton(R.string.ok, null)
                 .setNegativeButton(R.string.cancel, null)
                 .create();
+        if (getArguments()!=null) {
+            longitude.setText((getArguments().getString("longitude")));
+            latitude.setText((getArguments().getString("latitude")));
+        }
 
 
         d.setOnShowListener(new DialogInterface.OnShowListener() {
@@ -57,7 +60,7 @@ public class AddPlaceFragment extends AppCompatDialogFragment {
                 b.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                                              if (isValid()) {
+                        if (isValid()) {
                             listener.onNewItemCreated(getItem());
                             d.dismiss();
 
@@ -74,17 +77,17 @@ public class AddPlaceFragment extends AppCompatDialogFragment {
     }
 
     private boolean isValid() {
-        if((place.getText().toString()).trim().length() == 0){
+        if ((place.getText().toString()).trim().length() == 0) {
             place.setError("Can't be empty");
             place.requestFocus();
             return false;
         }
-        if((longitude.getText().toString()).trim().length() == 0|| Double.parseDouble(longitude.getText().toString())<-180.0  || Double.parseDouble(longitude.getText().toString())>180.0  ){
+        if ((longitude.getText().toString()).trim().length() == 0 || Double.parseDouble(longitude.getText().toString()) < -180.0 || Double.parseDouble(longitude.getText().toString()) > 180.0) {
             longitude.setError("From -180 to 180");
             longitude.requestFocus();
             return false;
         }
-        if((latitude.getText().toString()).trim().length() == 0 || Double.parseDouble(latitude.getText().toString())<-90.0 || Double.parseDouble(latitude.getText().toString())>90.0 ){
+        if ((latitude.getText().toString()).trim().length() == 0 || Double.parseDouble(latitude.getText().toString()) < -90.0 || Double.parseDouble(latitude.getText().toString()) > 90.0) {
             latitude.setError("From -90 to 90");
             latitude.requestFocus();
             return false;
@@ -106,9 +109,9 @@ public class AddPlaceFragment extends AppCompatDialogFragment {
 
     private View getContentView() {
         View contentView = LayoutInflater.from(getContext()).inflate(R.layout.dialog_add_place, null);
-        place= (EditText) contentView.findViewById(R.id.PlaceEditText);
+        place = (EditText) contentView.findViewById(R.id.PlaceEditText);
         longitude = (EditText) contentView.findViewById(R.id.LongitudeEditText);
-        latitude= (EditText) contentView.findViewById(R.id.LatitudeEditText);
+        latitude = (EditText) contentView.findViewById(R.id.LatitudeEditText);
 
 
         return contentView;

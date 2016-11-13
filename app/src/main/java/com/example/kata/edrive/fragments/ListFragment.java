@@ -1,13 +1,11 @@
 package com.example.kata.edrive.fragments;
 
 
-import android.app.Activity;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -70,7 +68,7 @@ public class ListFragment extends Fragment implements AddPlaceFragment.IAddPlace
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                new AddPlaceFragment().show(myContext.getSupportFragmentManager(),AddPlaceFragment.TAG);
+                new AddPlaceFragment().show(getActivity().getSupportFragmentManager(),AddPlaceFragment.TAG);
             }
         });
         initRecycleView();
@@ -90,13 +88,6 @@ public class ListFragment extends Fragment implements AddPlaceFragment.IAddPlace
     }
 
 
-    public FragmentActivity myContext;
-
-    @Override
-    public void onAttach(Activity activity) {
-        myContext=(FragmentActivity) activity;
-        super.onAttach(activity);
-    }
 
 
     private void initRecycleView() {

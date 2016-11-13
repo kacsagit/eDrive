@@ -30,6 +30,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -105,6 +106,18 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleA
     public void onMapReady(GoogleMap map) {
         googleMap = map;
         setUpMap();
+        googleMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
+            @Override
+            public void onMapClick(LatLng point) {
+                AddPlaceFragment anf=new AddPlaceFragment();
+                Bundle bundle = new Bundle();
+                DecimalFormat df = new DecimalFormat("#.0000");
+                bundle.putString("longitude",df.format(point.longitude));
+                bundle.putString("latitude",df.format(point.latitude));
+                anf.setArguments(bundle);
+                anf.show(getActivity().getSupportFragmentManager(),AddPlaceFragment.TAG);
+            }
+        });
 
     }
 
