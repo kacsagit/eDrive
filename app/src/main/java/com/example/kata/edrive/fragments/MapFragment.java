@@ -31,8 +31,10 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 
 /**
@@ -111,7 +113,9 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleA
             public void onMapClick(LatLng point) {
                 AddPlaceFragment anf=new AddPlaceFragment();
                 Bundle bundle = new Bundle();
-                DecimalFormat df = new DecimalFormat("#.0000");
+                DecimalFormatSymbols otherSymbols = new DecimalFormatSymbols(Locale.ROOT);
+                otherSymbols.setGroupingSeparator('.');
+                DecimalFormat df = new DecimalFormat("#.0000",otherSymbols);
                 bundle.putString("longitude",df.format(point.longitude));
                 bundle.putString("latitude",df.format(point.latitude));
                 anf.setArguments(bundle);
