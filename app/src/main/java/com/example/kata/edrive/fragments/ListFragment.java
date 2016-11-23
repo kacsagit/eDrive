@@ -89,9 +89,8 @@ public class ListFragment extends Fragment implements AddPlaceFragment.IAddPlace
     @Override
     public void onResume() {
         super.onResume();
-        loadWebData();
-
         initRecycleView();
+        loadWebData();
         EventBus.getDefault().register(this);
 
 
@@ -100,16 +99,9 @@ public class ListFragment extends Fragment implements AddPlaceFragment.IAddPlace
 
     private void initRecycleView() {
         recyclerView = (RecyclerView) view.findViewById(R.id.MainRecyclerView);
-
-
         MainActivity.adapter = new ItemAdapter();
-        loadItemsInBackground();
         recyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));
         recyclerView.setAdapter(MainActivity.adapter);
-
-
-
-
 
         ItemTouchHelper.Callback callback = new SimpleItemTouchHelperCallback(MainActivity.adapter, recyclerView);
         mItemTouchHelper = new ItemTouchHelper(callback);

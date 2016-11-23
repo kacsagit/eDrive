@@ -69,11 +69,8 @@ public class MainActivity extends AppCompatActivity implements AddPlaceFragment.
         } else {
             Log.d("PLAYGROUND", "Permission is granted");
         }
-
         sm = (SensorManager) getSystemService(SENSOR_SERVICE);
         sensorSpeed = sm.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
-        ItemAdapter adapter = new ItemAdapter();
-
     }
 
     @Override
