@@ -23,7 +23,7 @@ import com.example.kata.edrive.recycleview.RecycleViewItem;
 
 public class MainActivity extends AppCompatActivity implements AddPlaceFragment.IAddPlaceFragment, SensorEventListener {
 
-    public static ItemAdapter adapter = new ItemAdapter();
+    public static ItemAdapter adapter;
     public static ViewPager mainViewPager;
     FragmentPager detailsPagerAdapter;
     private SensorManager sm;
@@ -62,6 +62,7 @@ public class MainActivity extends AppCompatActivity implements AddPlaceFragment.
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setLogo(R.mipmap.ic_launcher);
+
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.SEND_SMS) != PackageManager.PERMISSION_GRANTED) {
             Log.d("PLAYGROUND", "Permission is not granted, requesting");
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.SEND_SMS}, 123);
@@ -71,6 +72,7 @@ public class MainActivity extends AppCompatActivity implements AddPlaceFragment.
 
         sm = (SensorManager) getSystemService(SENSOR_SERVICE);
         sensorSpeed = sm.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+        ItemAdapter adapter = new ItemAdapter();
 
     }
 

@@ -8,6 +8,6 @@ import com.orm.SugarRecord;
 public class RecycleViewItem extends SugarRecord   {
 
     public String place;
-    public double longitude;
-    public double latitude;
+    public float longitude;
+    public float latitude;
 }

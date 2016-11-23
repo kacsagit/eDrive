@@ -101,9 +101,9 @@ public class AddPlaceFragment extends AppCompatDialogFragment {
     private RecycleViewItem getItem() {
         RecycleViewItem item = new RecycleViewItem();
         item.place = place.getText().toString();
-        item.latitude = Double.parseDouble(latitude.getText().toString());
-        item.longitude = Double.parseDouble(longitude.getText().toString());
-
+        item.latitude = Float.parseFloat(latitude.getText().toString());
+        item.longitude = Float.parseFloat(longitude.getText().toString());
+        item.save();
         return item;
     }
 

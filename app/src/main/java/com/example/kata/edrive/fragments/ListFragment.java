@@ -1,6 +1,9 @@
 package com.example.kata.edrive.fragments;
 
 
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -19,6 +22,7 @@ import com.example.kata.edrive.R;
 import com.example.kata.edrive.network.GetLocationsEvent;
 import com.example.kata.edrive.network.NetworkItem;
 import com.example.kata.edrive.network.NetworkManager;
+import com.example.kata.edrive.recycleview.ItemAdapter;
 import com.example.kata.edrive.recycleview.RecycleViewItem;
 import com.example.kata.edrive.recycleview.SimpleItemTouchHelperCallback;
 
@@ -31,7 +35,7 @@ import java.util.List;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class ListFragment extends Fragment implements AddPlaceFragment.IAddPlaceFragment{ //implements AddPlaceFragment.IAddPlaceFragment{
+public class ListFragment extends Fragment implements AddPlaceFragment.IAddPlaceFragment { //implements AddPlaceFragment.IAddPlaceFragment{
 
     @Override
     public void onPause() {
@@ -62,18 +66,23 @@ public class ListFragment extends Fragment implements AddPlaceFragment.IAddPlace
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
+        super.onCreateView(inflater, container, savedInstanceState);
         view = inflater.inflate(R.layout.fragment_list, container, false);
         FloatingActionButton fab = (FloatingActionButton) view.findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                new AddPlaceFragment().show(getActivity().getSupportFragmentManager(),AddPlaceFragment.TAG);
+                new AddPlaceFragment().show(getActivity().getSupportFragmentManager(), AddPlaceFragment.TAG);
             }
         });
-        initRecycleView();
 
-
+        swipeRefresh = (SwipeRefreshLayout) view.findViewById(R.id.swipeRefresh);
+        swipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                loadWebData();
+            }
+        });
         return view;
     }
 
@@ -82,29 +91,27 @@ public class ListFragment extends Fragment implements AddPlaceFragment.IAddPlace
         super.onResume();
         loadWebData();
 
+        initRecycleView();
         EventBus.getDefault().register(this);
 
 
     }
 
 
-
-
     private void initRecycleView() {
         recyclerView = (RecyclerView) view.findViewById(R.id.MainRecyclerView);
-        swipeRefresh = (SwipeRefreshLayout) view.findViewById(R.id.swipeRefresh);
+
+
+        MainActivity.adapter = new ItemAdapter();
         loadItemsInBackground();
         recyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));
         recyclerView.setAdapter(MainActivity.adapter);
 
-        swipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                loadWebData();
-            }
-        });
 
-        ItemTouchHelper.Callback callback = new SimpleItemTouchHelperCallback(MainActivity.adapter,recyclerView);
+
+
+
+        ItemTouchHelper.Callback callback = new SimpleItemTouchHelperCallback(MainActivity.adapter, recyclerView);
         mItemTouchHelper = new ItemTouchHelper(callback);
         mItemTouchHelper.attachToRecyclerView(recyclerView);
     }
@@ -118,30 +125,59 @@ public class ListFragment extends Fragment implements AddPlaceFragment.IAddPlace
             }
 
             @Override
-            protected void onPostExecute(List<RecycleViewItem> shoppingItems) {
-                super.onPostExecute(shoppingItems);
-                MainActivity.adapter.update(shoppingItems);
+            protected void onPostExecute(List<RecycleViewItem> items) {
+                super.onPostExecute(items);
+                MainActivity.adapter.update(items);
+            }
+        }.execute();
+    }
+
+    private void loadItemsInBackground(final RecycleViewItem rwi) {
+        new AsyncTask<Void, Void, List<RecycleViewItem>>() {
+
+            @Override
+            protected List<RecycleViewItem> doInBackground(Void... voids) {
+                return RecycleViewItem.listAll(RecycleViewItem.class);
+            }
+
+            @Override
+            protected void onPostExecute(List<RecycleViewItem> items) {
+                super.onPostExecute(items);
+                MainActivity.adapter.update(items);
+                MainActivity.adapter.addItem(rwi);
+                recyclerView.setAdapter(MainActivity.adapter);
+                swipeRefresh.setRefreshing(false);
             }
         }.execute();
     }
 
 
     private void loadWebData() {
-        NetworkManager galleryInteractor = new NetworkManager(this.getContext());
-        galleryInteractor.getData();
+        if (isNetworkAvailable()) {
+            NetworkManager galleryInteractor = new NetworkManager(this.getContext());
+            galleryInteractor.getData();
+        } else {
+            loadItemsInBackground();
+            swipeRefresh.setRefreshing(false);
+        }
+    }
+
+    private boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager) this.getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onResponse(GetLocationsEvent<NetworkItem> event) {
         RecycleViewItem rwi = new RecycleViewItem();
-        NetworkItem itemsn=event.getLocations();
+        NetworkItem itemsn = event.getLocations();
         rwi.place = itemsn.city;
         rwi.latitude = itemsn.lat;
         rwi.longitude = itemsn.lon;
-        MainActivity.adapter.removeAllItems();
-        MainActivity.adapter.addItem(rwi);
-        recyclerView.setAdapter(MainActivity.adapter);
-        swipeRefresh.setRefreshing(false);
+        loadItemsInBackground(rwi);
+
     }
 
 

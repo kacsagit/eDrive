@@ -43,8 +43,8 @@ public class ItemAdapter extends
     public void onBindViewHolder(ItemViewHolder holder, int position) {
         RecycleViewItem item = items.get(position);
         holder.place.setText(item.place);
-        holder.longitude.setText(Double.toString(item.longitude));
-        holder.latitude.setText(Double.toString(item.latitude));
+        holder.longitude.setText(Float.toString(item.longitude));
+        holder.latitude.setText(Float.toString(item.latitude));
         holder.latitude1.setText(R.string.latitude);
         holder.longitude1.setText(R.string.longitude);
         holder.place1.setText(R.string.place);
@@ -97,9 +97,9 @@ public class ItemAdapter extends
         return items.size();
     }
 
-    public void update(List<RecycleViewItem> items) {
+    public void update(List<RecycleViewItem> itemsrec) {
         items.clear();
-        items.addAll(items);
+        items.addAll(itemsrec);
         notifyDataSetChanged();
 
     }
