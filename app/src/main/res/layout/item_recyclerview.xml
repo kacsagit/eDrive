@@ -15,7 +15,7 @@
         android:orientation="horizontal">
     <TextView
         android:id="@+id/Place"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:textSize="18sp"
         android:layout_weight="0.2"
@@ -23,7 +23,7 @@
 
     <TextView
         android:id="@+id/PlaceName"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:textSize="18sp"
         android:layout_weight="0.8"
@@ -39,14 +39,14 @@
 
         <TextView
             android:id="@+id/Longitude"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="0.5"
             tools:text="Longitude:" />
 
         <TextView
             android:id="@+id/PlaceLongitude"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="0.5"
             tools:text="Latitude" />
@@ -56,14 +56,14 @@
 
         <TextView
             android:id="@+id/Latitude"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="0.5"
             tools:text="Latitude:" />
 
         <TextView
             android:id="@+id/PlaceLatitude"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="0.5"
 
